@@ -64,13 +64,15 @@ func resourcelokiRuleGroupAlerting() *schema.Resource {
 							ValidateFunc: validateDuration,
 							StateFunc:    formatDuration,
 						},
-						"keep_firing_for": {
-							Type:         schema.TypeString,
-							Description:  "How long an alert will continue firing after the condition that triggered it has cleared.",
-							Optional:     true,
-							ValidateFunc: validateDuration,
-							StateFunc:    formatDuration,
-						},
+						/*
+							"keep_firing_for": {
+								Type:         schema.TypeString,
+								Description:  "How long an alert will continue firing after the condition that triggered it has cleared.",
+								Optional:     true,
+								ValidateFunc: validateDuration,
+								StateFunc:    formatDuration,
+							},
+						*/
 						"annotations": {
 							Type:         schema.TypeMap,
 							Description:  "Annotations to add to each alert.",
@@ -229,12 +231,13 @@ func expandAlertingRules(v []interface{}) []alertingRule {
 				rule.For = raw.(string)
 			}
 		}
-
-		if raw, ok := data["keep_firing_for"]; ok {
-			if raw.(string) != "" {
-				rule.KeepFiringFor = raw.(string)
+		/*
+			if raw, ok := data["keep_firing_for"]; ok {
+				if raw.(string) != "" {
+					rule.KeepFiringFor = raw.(string)
+				}
 			}
-		}
+		*/
 
 		if raw, ok := data["labels"]; ok {
 			if len(raw.(map[string]interface{})) > 0 {
@@ -269,9 +272,11 @@ func flattenAlertingRules(v []alertingRule) []map[string]interface{} {
 		if v.For != "" {
 			rule["for"] = v.For
 		}
-		if v.KeepFiringFor != "" {
-			rule["keep_firing_for"] = v.KeepFiringFor
-		}
+		/*
+			if v.KeepFiringFor != "" {
+				rule["keep_firing_for"] = v.KeepFiringFor
+			}
+		*/
 		if v.Labels != nil {
 			rule["labels"] = v.Labels
 		}
@@ -297,12 +302,12 @@ func validateAlertingRuleName(v interface{}, k string) (ws []string, errors []er
 }
 
 type alertingRule struct {
-	Alert         string            `yaml:"alert"`
-	Expr          string            `yaml:"expr"`
-	For           string            `yaml:"for,omitempty"`
-	KeepFiringFor string            `yaml:"keep_firing_for,omitempty"`
-	Labels        map[string]string `yaml:"labels,omitempty"`
-	Annotations   map[string]string `yaml:"annotations,omitempty"`
+	Alert string `yaml:"alert"`
+	Expr  string `yaml:"expr"`
+	For   string `yaml:"for,omitempty"`
+	// KeepFiringFor string            `yaml:"keep_firing_for,omitempty"`
+	Labels      map[string]string `yaml:"labels,omitempty"`
+	Annotations map[string]string `yaml:"annotations,omitempty"`
 }
 
 type alertingRuleGroup struct {

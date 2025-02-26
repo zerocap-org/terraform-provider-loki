@@ -16,13 +16,16 @@ description: |-
 resource "loki_rule_group_alerting" "test" {
   name      = "test1"
   namespace = "namespace1"
+
+  # can define multiple rules
   rule {
     alert       = "HighPercentageError"
     expr        = <<EOT
-sum(rate({app="foo", env="production"} |= "error" [5m])) by (job)
+sum(rate({app="bar", env="dev"} |= "error" [5m])) by (job)
   /
-sum(rate({app="foo", env="production"}[5m])) by (job)
+sum(rate({app="bar", env="dev"}[5m])) by (job)
   > 0.05
+EOT
     for         = "10m"
     labels      = {
       severity = "warning"
@@ -63,7 +66,6 @@ Optional:
 
 - `annotations` (Map of String) Annotations to add to each alert.
 - `for` (String) The duration for which the condition must be true before an alert fires.
-- `keep_firing_for` (String) How long an alert will continue firing after the condition that triggered it has cleared.
 - `labels` (Map of String) Labels to add or overwrite for each alert.
 
 ## Import
