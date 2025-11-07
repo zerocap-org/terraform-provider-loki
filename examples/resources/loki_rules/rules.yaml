@@ -1,0 +1,40 @@
+groups:
+  - name: production-alerts
+    interval: 1m
+    rules:
+      - alert: ErrorRateHigh
+        expr: |
+          sum(rate({environment="production"} |= "error" [5m])) by (service)
+            /
+          sum(rate({environment="production"}[5m])) by (service)
+            > 0.03
+        for: 10m
+        labels:
+          severity: critical
+          environment: production
+        annotations:
+          summary: High error rate in {{ $labels.service }}
+          description: Error rate is {{ $value | humanizePercentage }}
+
+      - alert: NoLogsReceived
+        expr: |
+          absent_over_time({job="critical-app"}[5m])
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: No logs received from critical application
+
+  - name: performance-metrics
+    interval: 30s
+    rules:
+      - record: service:log_lines_total:rate5m
+        expr: sum(rate({service=~".+"}[5m])) by (service)
+        labels:
+          metric_type: counter
+
+      - record: environment:log_bytes_total:rate1m
+        expr: sum(rate({environment=~".+"}[1m])) by (environment)
+        labels:
+          metric_type: gauge
+          aggregation: sum
