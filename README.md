@@ -1,3 +1,10 @@
+Paul sez: This is the code for the TF loki provider
+
+* forked as it is a 'one person project' and might disappear
+  * it is 17 times saner than other methods for managing Loki alert rules
+* despite the generic Loki name, it only handles 'ruler' config and not
+  the other squillion config options in Loki
+
 # Terraform provider for grafana loki
 
 This terraform provider allows you to interact with grafana loki.
