@@ -2,6 +2,7 @@ Paul sez: This is the code for the TF loki provider
 
 * forked as it is a 'one person project' and might disappear
   * it is 17 times saner than other methods for managing Loki alert rules
+  * see jira ticket DO-400
 * despite the generic Loki name, it only handles 'ruler' config and not
   the other squillion config options in Loki
 
